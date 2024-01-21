@@ -1,6 +1,6 @@
 // File: alertScript.js
 
-//alert(document.domain);
+alert(document.domain);
 
 // Example JavaScript code in your .js file
 var img = document.createElement('img');
