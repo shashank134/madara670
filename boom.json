@@ -1,0 +1,17 @@
+{
+  "en": {
+    "form.auth.title": "Xsolla Payouts\"><u>boom</u>",
+    "form.auth.subtitle": "Enter your e-mail to continue",
+    "form.button.get-code": "Send a secret code",
+    "http.003-047": "User doesn't exists."
+  },
+  "de": {},
+  "es": {},
+  "ja": {},
+  "ko": {},
+  "pt": {},
+  "ru": {
+    "http.003-047": "Пользователь не найден."
+  },
+  "zh": {}
+}
