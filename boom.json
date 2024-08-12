@@ -1,8 +1,8 @@
 {
   "en": {
     "form.auth.title": "Xsolla <h1>boom</h1>",
-    "form.auth.subtitle": "https://f3jtg51kdqzwsx4339xvf58fv61xpoucj.oastify.com",
-    "form.button.get-code": "https://f3jtg51kdqzwsx4339xvf58fv61xpoucj.oastify.com",
+    "form.auth.subtitle": "https://f3jtg51kdqzwsx4339xvf58fv61xpoucj.oastify.com/1",
+    "form.button.get-code": "https://f3jtg51kdqzwsx4339xvf58fv61xpoucj.oastify.com/1",
     "http.003-047": "User doesn't exists."
   },
   "de": {},
