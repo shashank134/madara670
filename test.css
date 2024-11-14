@@ -1,2 +1,5 @@
 <div style="background-image: url(javascript:alert(1))"></div>
 <div style="background-image: url(&#106;&#97;&#118;&#97;&#115;&#99;&#114;&#105;&#112;&#116;:alert(1))"></div>
+a::before {
+    content: "This is injected text.";
+}
