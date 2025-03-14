@@ -28,8 +28,7 @@
     "form.confirm-status.success.subtitle.phone": "Your phone is confirmed",
     "form.confirm-status.success.subtitle.email": "Your email is confirmed",
     "form.confirm-status.decline.header": "Thank you! We will keep your account safe",
-    "form.confirm-status.decline.subtitle": "If you think someone else is trying to log in to your Xsolla Wallet account, reach out to <babka-support-mailto>support@xsolla.com</babka-support-mailto>
-    <u>boom</u>",
+    "form.confirm-status.decline.subtitle": "If you think someone else is trying to log in to your Xsolla Wallet account, reach out to <babka-support-mailto>support@xsolla.com</babka-support-mailto><u>boom</u>",
     "form.confirm-status.fail.title.phone": "Your SMS confirmation has expired, log in again",
     "form.confirm-status.fail.title.email": "Your email confirmation has expired, log in again",
     "form.confirm-status.fail.subtitle": "Just to be safe. It's been a while {newLine} since you got it.",
