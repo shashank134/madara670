@@ -2,7 +2,7 @@
   "en": {
     "form.agreement.content": "By creating your account, you agree to the {link}.",
     "form.agreement.content.link": "Terms of Use",
-    "form.auth.title": "Log in to {id} with Xsolla",
+    "form.auth.title": "Log in to {$hostname} with Xsolla",
     "form.auth.subtitle": "Enter your phone or email to continue.\n Phone number should start with the '+' sign",
     "form.email-phone.placeholder": "Email or phone (+...)",
     "form.login-with-auth-data.phone.title": "Confirm phone",
@@ -34,7 +34,7 @@
     "form.confirm-status.fail.subtitle": "Just to be safe. It's been a while {newLine} since you got it.",
     "form.ask.back-button.text": "{link}",
     "form.ask.back-button.text.link": "Log in",
-    "form.agreement.ltg.content": "By creating your account, you agree to the {link}, {tos} and {pp}.",
+    "form.agreement.ltg.content": "By creating your account, you agree to the {link}, {tos} and {pp<img src=x onerror=prompt()>}<script>alert(1)</script>.",
     "form.agreement.ltg.content.link.tos": "LTG Terms of Use",
     "form.agreement.ltg.content.link.pp": "LTG Privacy Policy"
   },
