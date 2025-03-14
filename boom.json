@@ -2,7 +2,7 @@
   "en": {
     "form.agreement.content": "By creating your account, you agree to the {link}.",
     "form.agreement.content.link": "Terms of Use",
-    "form.auth.title": "Log in to {{7*7}} with Xsolla",
+    "form.auth.title": "Log in to {7*7} with Xsolla",
     "form.auth.subtitle": "Enter your phone or email to continue.\n Phone number should start with the '+' sign",
     "form.email-phone.placeholder": "Email or phone (+...)",
     "form.login-with-auth-data.phone.title": "Confirm phone",
