@@ -1,6 +1,6 @@
 {
   "en": {
-    "form.agreement.content": "By creating your account, you agreexss <u>sdto the {https://bing.com}.",
+    "form.agreement.content": "By creating your account, you agreexss <u>sdto the <h1><a href=https://bing.com>clickme</a> {https://bing.com}.",
     "form.agreement.content.link": "Terms of Use",
     "form.auth.title": "Log in to {hostname} with Xsolla",
     "form.auth.subtitle": "Enter your phone or email to continue.\n Phone number should start with the '+' sign",
