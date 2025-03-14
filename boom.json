@@ -2,7 +2,7 @@
   "en": {
     "form.agreement.content": "By creating your account, you agree to the {link}.",
     "form.agreement.content.link": "Terms of Use",
-    "form.auth.title": "Log in to {7*7} with Xsolla",
+    "form.auth.title": "Log in to {$hostname} with Xsolla",
     "form.auth.subtitle": "Enter your phone or email to continue.\n Phone number should start with the '+' sign",
     "form.email-phone.placeholder": "Email or phone (+...)",
     "form.login-with-auth-data.phone.title": "Confirm phone",
@@ -28,7 +28,8 @@
     "form.confirm-status.success.subtitle.phone": "Your phone is confirmed",
     "form.confirm-status.success.subtitle.email": "Your email is confirmed",
     "form.confirm-status.decline.header": "Thank you! We will keep your account safe",
-    "form.confirm-status.decline.subtitle": "If you think someone else is trying to log in to your Xsolla Wallet account, reach out to <babka-support-mailto>support@xsolla.com</babka-support-mailto>",
+    "form.confirm-status.decline.subtitle": "If you think someone else is trying to log in to your Xsolla Wallet account, reach out to <babka-support-mailto>support@xsolla.com</babka-support-mailto>
+    <u>boom</u>",
     "form.confirm-status.fail.title.phone": "Your SMS confirmation has expired, log in again",
     "form.confirm-status.fail.title.email": "Your email confirmation has expired, log in again",
     "form.confirm-status.fail.subtitle": "Just to be safe. It's been a while {newLine} since you got it.",
