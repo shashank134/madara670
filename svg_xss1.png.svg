@@ -1,0 +1,20 @@
+<?xml version="1.0" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+
+<svg version="1.1" baseProfile="full" xmlns="http://www.w3.org/2000/svg">
+   <!-- SVG <a> tag wrapping the polygon -->
+   <a href="https://example.com" target="_blank">
+      <polygon id="triangle" points="0,0 0,50 50,0" fill="#009900" stroke="#004400"/>
+   </a>
+
+   <!-- Using <foreignObject> to include HTML with an <a> tag -->
+   <foreignObject x="10" y="10" width="200" height="50">
+      <body xmlns="http://www.w3.org/1999/xhtml">
+         <p style="color: blue; font-size: 14px;">
+            This is HTML text inside SVG with a link: 
+            <input type="hidden" oncontentvisibilityautostatechange="alert(/document/.source.domain)" style="content-visibility:auto">
+            <p oncontentvisibilityautostatechange="alert(/FirefoxOnly/)" style="content-visibility:auto">
+         </p>
+      </body>
+   </foreignObject>
+</svg>
