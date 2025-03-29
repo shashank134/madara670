@@ -19,7 +19,7 @@
           "200": {
             "description": "XSS or HTML Injection Test",
             "content": {
-              "application/json": {
+              "text/html": {
                 "example": {
                   "message": "<script>alert('XSS in API response!')</script>",
                   "html_test": "<h1>Injected HTML!</h1><p>This should render if not sanitized.</p>"
