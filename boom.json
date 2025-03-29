@@ -3,20 +3,26 @@
   "info": {
     "title": "Vulnerable API",
     "version": "1.0.0",
-    "description": "<script>alert('XSS Attack!')</script>"
+    "description": "<h1>HTML Injection Test</h1><img src=x onerror=alert('XSS in description!')><p>This is a test for HTML injection.</p>"
   },
+  "servers": [
+    {
+      "url": "javascript:alert('XSS in server URL!')"
+    }
+  ],
   "paths": {
     "/xss": {
       "get": {
         "summary": "Trigger XSS",
-        "operationId": "xss",
+        "description": "<h2>Testing HTML Injection</h2><p>If you see this, HTML injection worked.</p><script>alert('XSS inside API description!')</script>",
         "responses": {
           "200": {
-            "description": "XSS executed",
+            "description": "XSS or HTML Injection Test",
             "content": {
               "application/json": {
                 "example": {
-                  "message": "<script>alert('XSS from response!')</script>"
+                  "message": "<script>alert('XSS in API response!')</script>",
+                  "html_test": "<h1>Injected HTML!</h1><p>This should render if not sanitized.</p>"
                 }
               }
             }
