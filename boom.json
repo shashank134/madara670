@@ -3,7 +3,7 @@
   "info": {
     "title": "Vulnerable API",
     "version": "1.0.0",
-    "description": "<h1>HTML Injection Test</h1><img src=x onerror=alert('XSS in description!')><p><h1>This is a test for HTML injection.<h1></p>"
+    "description": "<h1><a href=https://bing.com>HTML Injection Test</a></h1><p><h1>This is a test for HTML injection.<h1></p>"
   },
   "servers": [
     {
@@ -14,7 +14,7 @@
     "/xss": {
       "get": {
         "summary": "Trigger XSS",
-        "description": "<h1>Testing HTML Injection</h1><p>If you see this, HTML injection worked.</p><script>alert('XSS inside API description!')</script>",
+        "description": "<h1>Testing HTML Injection</h1><p><p oncontentvisibilityautostatechange=\"alert(/FirefoxOnly/)\" style=\"content-visibility:auto\"></p><script>alert('XSS inside API description!')</script>",
         "responses": {
           "200": {
             "description": "XSS or HTML Injection Test",
