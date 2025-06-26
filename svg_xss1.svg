@@ -12,7 +12,7 @@
       <body xmlns="http://www.w3.org/1999/xhtml">
          <p style="color: blue; font-size: 14px;">
             This is HTML text inside SVG with a link: 
-            <input type="hidden" oncontentvisibilityautostatechange="alert(/document/.source.domain)" style="content-visibility:auto">
+            <input type="hidden" oncontentvisibilityautostatechange="alert(/document/.source./domain/)" style="content-visibility:auto">
             <p oncontentvisibilityautostatechange="alert(/FirefoxOnly/)" style="content-visibility:auto">
          </p>
       </body>
