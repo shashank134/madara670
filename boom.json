@@ -1,12 +1,10 @@
 {
-  "openapi": "3.0.0",
-  "info": {
-    "title": "A/B Splitter + Embedded Interactive Tester (LOCAL ONLY)",
-    "version": "1.0.0",
-    "description": "<h1>test</h1>"  },
-  "paths": {},
-  "components": {},
-  "x-payloads": [
-    ""
-  ]
+    "url": "https://shashank134.github.io/madara670/test.yaml",
+    "urls": [{
+        "url": "https://shashank134.github.io/madara670/test.yaml",
+        "name": "Foo"
+    },{
+        "url": "hhttps://shashank134.github.io/madara670/test2.yaml",
+        "name": "Foo2"
+    }]
 }
